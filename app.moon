@@ -5,6 +5,7 @@ upload = require "tic.upload"
 import respond_to, capture_errors from require "lapis.application"
 
 import b36_to_n, n_to_b36 from require "utils"
+import tobit from require "bit"
 
 import Carts from require "models"
 
@@ -46,8 +47,8 @@ class extends lapis.Application
     }
     [play: "/play"]: =>
         @page = "play"
-        if id = tonumber(@GET.id)
-            cart_id = n_to_b36(id)
+        if id = tonumber(@GET.cart)
+            cart_id = n_to_b36(tobit(id))
             return redirect_to: @url_for "play_cart", cart: cart_id
         return "NYI", layout: false, content_type: "text/plain"
     [play_cart: "/play/:cart[0-9A-Za-z]"]: capture_errors {
