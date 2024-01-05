@@ -50,7 +50,9 @@ class extends lapis.Application
         if id = tonumber(@GET.cart)
             cart_id = n_to_b36(tobit(id))
             return redirect_to: @url_for "play_cart", cart: cart_id
-        return "NYI", layout: false, content_type: "text/plain"
+        @grab_bag = Carts\select "order by random() limit 3"
+        @page = "play"
+        render: true
     [play_cart: "/play/:cart[0-9A-Za-z]"]: capture_errors {
         =>
             id = b36_to_n(@params.cart)
