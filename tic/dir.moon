@@ -10,10 +10,29 @@ gen_listing = (folders, files) ->
     out ..="\n}"
     return out
 
+dir_queries = {
+    "": "order by [update] desc limit 5",
+    "New": "order by creation desc"
+}
+
+get_subdirs = (dir) ->
+    there = {}
+    if dir==""
+        for k,v in pairs(dir_queries)
+            k\gsub("^([^/]+)/?",(d) -> there[d]=true)
+    else
+        for k,v in pairs(dir_queries)
+            k\gsub("^#{dir}/([^/]+)/?",(d) -> there[d]=true)
+    dirs = {}
+    for k,v in pairs(there)
+        table.insert(dirs,k)
+    dirs
+
 dir_listing = (dir) =>
-    return @app.handle_404 @ unless dir=="" or dir=="New"
+    query = dir_queries[dir]
+    return @app.handle_404 @ unless query
     files = {}
-    carts = Carts\select "order by "..(dir=="New" and "creation desc" or "id")
+    carts = Carts\select query
     for cart in *carts
         file = {}
         file.name = cart.title
@@ -21,8 +40,6 @@ dir_listing = (dir) =>
         file.id = cart.id
         file.filename = cart.filename
         table.insert(files,file)
-    dirs = {}
-    if dir=="" then dirs[1]="New"
-    return gen_listing(dirs,files)
+    return gen_listing(get_subdirs(dir),files)
 
 return dir_listing
