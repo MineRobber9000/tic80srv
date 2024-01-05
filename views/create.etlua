@@ -1,0 +1,15 @@
+<h1>Create Your Game</h1>
+<hr>
+<h2>In The Browser</h2>
+<iframe src="/embed" style="width: 100%" id="tic80_iframe"></iframe>
+
+<script>
+    function resize() {
+        let iframe = document.getElementById("tic80_iframe");
+        iframe.style.height = iframe.clientWidth * 144 / 256 + 'px';
+    }
+
+    resize();
+
+    window.addEventListener('resize', resize);
+</script>

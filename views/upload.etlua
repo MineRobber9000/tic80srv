@@ -1,0 +1,39 @@
+<form action="<%- url_for("upload") %>" method="POST" enctype="multipart/form-data">
+    <h1>Upload</h1>
+    <hr>
+    <h2>Cartridge</h2>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="cart">TIC-80 cartridge file:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="file" id="cart" name="cart" required></div>
+    </div>
+    <hr>
+    <h2>Metadata</h2>
+    <p class="form-text">Any metadata not filled out will be copied from TIC-80 cart.</p>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="title">Title:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="title" name="title"></div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="author">Author:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="author" name="author"></div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="desc">Short description:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="desc" name="desc"></div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="long_desc">Long description:</label>
+        <textarea class="form-control" id="long_desc" name="long_desc"></textarea>
+        <p class="form-text">The long description will only be shown on the website.</p>
+    </div>
+    <% if errors then %>
+    <div class="text-bg-danger container pt-3 pb-1 px-4 mb-3 rounded-pill">
+        <ul>
+        <% for _, error_msg in pairs(errors) do %>
+            <li><%= error_msg %></li>
+        <% end %>
+        </ul>
+    </div>
+    <% end %>
+    <button type="submit" class="form-control">Submit</button>
+</form>
