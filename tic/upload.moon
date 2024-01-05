@@ -16,6 +16,9 @@ capture_errors =>
     if not has_tic_ext filename
         yield_error "Cartridge must be a TIC-80 cartridge"
     hash = sha256(file.content)
+    hash_carts = Carts\select "where hash = ?", hash
+    if #hash_carts>0
+        return redirect_to: @url_for "play_cart", cart: n_to_b36(hash_carts[1].id)
     meta = get_metadata(file.content)
     if @POST.title~=""
         meta.title = @POST.title
