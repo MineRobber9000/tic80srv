@@ -1,6 +1,6 @@
 import capture_errors, yield_error from require "lapis.application"
 import assert_valid from require "lapis.validate"
-import filename, has_tic_ext, write_file, copy_file, n_to_b36 from require "utils"
+import filename, has_tic_ext, write_file, copy_file, n_to_b36, contains_banned_word from require "utils"
 import sha256 from require "libs.sha2"
 import Carts from require "models"
 require"lfs"
@@ -33,7 +33,7 @@ capture_errors =>
     save_filename = meta.title\lower!\gsub("%W+","_") .. ".tic"
     math.randomseed os.time!
     id = math.random(0,(36^6)-1)
-    while Carts\find id
+    while (Carts\find id) or contains_banned_word(id)
         id = math.random(0,(36^6)-1)
     now = os.date("!%Y-%m-%dT%H:%M:%SZ")
     cart = Carts\create {

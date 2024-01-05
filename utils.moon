@@ -69,6 +69,45 @@ b36_to_n: (b36) ->
         n=n*36+d
     n
 
+banned_words = {
+    "FUCK",
+    "SHIT",
+    "PISS",
+    "COCK",
+    "TITS",
+    "ANAL",
+    "ANUS",
+    "ARSE",
+    "CLIT",
+    "CRAP",
+    "DICK",
+    "DYKE",
+    "GOOK",
+    "HOMO",
+    "JIZZ",
+    "JIZM",
+    "KIKE",
+    "PAKI",
+    "SHAG",
+    "SLUT",
+    "SPIC",
+    "TWAT",
+    "WANK",
+    "ASS",
+    "FAG",
+    "CUM",
+    "JEW",
+    "TIT"
+}
+
+contains_banned_word = (n) ->
+    if type(n)=="number"
+        n = n_to_b36(n)
+    for banned_word in *banned_words
+        if n\find(banned_word)
+            return true
+    false
+
 {
     :filename
     
@@ -81,4 +120,6 @@ b36_to_n: (b36) ->
     :n_to_b36
     
     :b36_to_n
+
+    :contains_banned_word
 }
