@@ -41,8 +41,11 @@ make server
 
 To upload carts, navigate to `http://localhost:8080/upload`. Note that only
 `.tic` cartridges can be uploaded at the moment, and covers will not work in
-`surf` at the moment (they all show the "this a test lmao" cover; eventually
-the `cover.gif` will be programmatically created from the cart).
+`surf` (they all show the "this a test lmao" cover; eventually the `cover.gif`
+will be programmatically created from the cart).
+
+[openresty]: https://openresty.org/en/download.html
+[luarocks]: https://luarocks.org/#quick-start
 
 ### TIC-80 build
 
