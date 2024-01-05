@@ -1,0 +1,19 @@
+<% for i=1,#carts,3 do %>
+<div class="row">
+    <% if carts[i] then %>
+    <div class="col-sm-4">
+        <% render("widgets.cart", {cart = carts[i]}) %>
+    </div>
+    <% end %>
+    <% if carts[i+1] then %>
+    <div class="col-sm-4">
+        <% render("widgets.cart", {cart = carts[i+1]}) %>
+    </div>
+    <% end %>
+    <% if carts[i+2] then %>
+    <div class="col-sm-4">
+        <% render("widgets.cart", {cart = carts[i+2]}) %>
+    </div>
+    <% end %>
+</div>
+<% end %>
