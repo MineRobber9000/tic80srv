@@ -1,0 +1,16 @@
+<h1><%= cart.title %></h1>
+<h2>by <%= cart.author %></h2>
+<p><%= cart.desc %></p>
+<iframe src="/embed/<%- cart_id %>" style="width: 100%" id="tic80_iframe"></iframe>
+<p><%- cart.long_desc:gsub("&","&amp;"):gsub("<","&lt;"):gsub("\n","</p><p>") %></p>
+
+<script>
+    function resize() {
+        let iframe = document.getElementById("tic80_iframe");
+        iframe.style.height = iframe.clientWidth * 144 / 256 + 'px';
+    }
+
+    resize();
+
+    window.addEventListener('resize', resize);
+</script>

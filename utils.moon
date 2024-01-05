@@ -44,7 +44,9 @@ b36alph = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         file = assert_error io.open(src,"rb")
         contents = file\read "*a"
         file\close!
-        write_file dst, contents
+        file = assert_error io.open(dst,"wb")
+        file\write contents
+        file\close!
     
     n_to_b36: (n) ->
         out = ""

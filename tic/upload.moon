@@ -1,6 +1,6 @@
 import capture_errors, yield_error from require "lapis.application"
 import assert_valid from require "lapis.validate"
-import filename, has_tic_ext, write_file, n_to_b36 from require "utils"
+import filename, has_tic_ext, write_file, copy_file, n_to_b36 from require "utils"
 import sha256 from require "libs.sha2"
 import Carts from require "models"
 require"lfs"
@@ -47,4 +47,4 @@ capture_errors =>
     mkdir("cart/#{hash}")
     write_file("cart/#{hash}/#{save_filename}",file.content)
     copy_file("cover.gif","cart/#{hash}/cover.gif")
-    redirect_to: @url_for "info", cart: n_to_b36(id)
+    redirect_to: @url_for "play_cart", cart: n_to_b36(id)
