@@ -2,7 +2,7 @@
 <h2>by <%= cart.author %></h2>
 <h2>uploaded by <%if link_to_uploader~='#' then %><a href="<%= link_to_uploader %>"><%= uploader.username %></a><% else %><%= uploader.username %><% end %></h2>
 <p><%= cart.desc %></p>
-<iframe src="/embed/<%- cart_id %>" style="width: 100%" id="tic80_iframe"></iframe>
+<iframe src="<%- url_for('embed_cart', {cart = cart_id}) %>" style="width: 100%" id="tic80_iframe"></iframe>
 <p><%- cart.long_desc:gsub("&","&amp;"):gsub("<","&lt;"):gsub("\n","</p><p>") %></p>
 
 <script>
