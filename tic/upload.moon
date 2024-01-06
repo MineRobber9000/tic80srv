@@ -51,4 +51,5 @@ capture_errors =>
     mkdir("cart/#{hash}")
     write_file("cart/#{hash}/#{save_filename}",file.content)
     copy_file("cover.gif","cart/#{hash}/cover.gif")
+    os.execute "/usr/bin/python3 tools/cartridge_to_cover.py cart/#{hash}/#{save_filename} cart/#{hash}/cover.gif"
     redirect_to: @url_for "play_cart", cart: n_to_b36(id)
