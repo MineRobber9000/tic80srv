@@ -57,7 +57,7 @@ n_to_b36 = (n) ->
         out = "0"..out
     out
 
-b36_to_n: (b36) ->
+b36_to_n = (b36) ->
     n = 0
     for i=1,#b36 do
         c=string.sub(b36,i,i)
