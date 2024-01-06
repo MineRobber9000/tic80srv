@@ -58,7 +58,7 @@ class extends lapis.Application
             id = b36_to_n(@params.cart)
             cart = Carts\find id
             if not cart
-                @app.handle_404 @
+                return @app.handle_404 @
             @cart_id = n_to_b36(id)
             @cart = cart
             @page = "play"
