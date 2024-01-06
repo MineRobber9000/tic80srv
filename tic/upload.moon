@@ -45,7 +45,8 @@ capture_errors =>
         long_desc: @POST.long_desc,
         :hash,
         creation: now,
-        update: now
+        update: now,
+        uploader_id: @user\rowid!
     }
     mkdir("cart/#{hash}")
     write_file("cart/#{hash}/#{save_filename}",file.content)

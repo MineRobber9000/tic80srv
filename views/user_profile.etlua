@@ -1,0 +1,2 @@
+<h1 class="mb-3">Recent games</h1>
+<% render("widgets.cart_list",{carts = recent_carts}) %>

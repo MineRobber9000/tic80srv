@@ -1,4 +1,4 @@
-SOURCES     := $(wildcard *.moon) $(wildcard tic/*.moon) $(wildcard models/*.moon)
+SOURCES     := $(wildcard *.moon) $(wildcard tic/*.moon) $(wildcard models/*.moon) $(wildcard users/*.moon)
 LUA_SOURCES := $(patsubst %.moon, %.lua, $(SOURCES))
 
 all: $(LUA_SOURCES)

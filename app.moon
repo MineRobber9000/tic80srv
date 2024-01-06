@@ -1,13 +1,15 @@
 lapis = require "lapis"
 tic_api = require "tic.api"
 upload = require "tic.upload"
+signup = require "users.signup"
+signin = require "users.signin"
 
 import respond_to, capture_errors from require "lapis.application"
 
 import b36_to_n, n_to_b36 from require "utils"
 import tobit from require "bit"
 
-import Carts from require "models"
+import Carts, Users from require "models"
 
 class extends lapis.Application
     @enable "etlua"
@@ -28,9 +30,15 @@ class extends lapis.Application
         render: true
     [upload: "/upload"]: respond_to {
         GET: =>
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: @url_for "upload"}
             @page = "create"
             render: true,
         POST: =>
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: @url_for "upload"}
+            user = Users\select "where username = ?", @session.user
+            @user = user[1]
             @page = "create"
             upload @
     }
@@ -61,10 +69,36 @@ class extends lapis.Application
                 return @app.handle_404 @
             @cart_id = n_to_b36(id)
             @cart = cart
+            @uploader = cart\get_uploader!
+            @link_to_uploader = @uploader\link_to @
             @page = "play"
             render: true
         on_error: => @app.handle_404 @
     }
+    [signin: "/signin"]: respond_to {
+        GET: => render: true,
+        POST: => signin @
+    }
+    [signup: "/signup"]: respond_to {
+        GET: => render: true,
+        POST: => signup @
+    }
+    [signout: "/signout"]: =>
+        @session.user = nil
+        redirect_to: @url_for "home"
+    [profile: "/profile"]: =>
+        if not @session.user
+            return redirect_to: @url_for "signin", nil, {return_to: @url_for "profile"}
+        @user = Users\get_one "where username = ?", @session.user
+        @recent_carts = @user\get_carts!
+        render: true
+    [user_profile: "/user/:username"]: =>
+        users = Users\select "where username = ?", @params.username
+        @user = users[1]
+        unless @user
+            return @app.handle_404 @
+        @recent_carts = @user\get_carts!
+        render: true
     [info: "/info/:cart[0-9A-Za-z]"]: capture_errors {
         =>
             id = b36_to_n(@params.cart)

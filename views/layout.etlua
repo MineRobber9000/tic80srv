@@ -34,6 +34,13 @@
                         <a class="nav-link<%- (page.active and ' active') or '' %>" <%- (page.active and 'aria-current="page"' or "") %> href="<%- page.link %>"><%- page.name %></a>
                     </li><% end %>
                 </ul>
+                <div class="d-flex">
+                    <% if not session.user then %>
+                    <a href="/signin" class="nav-link">Sign in</a>
+                    <% else %>
+                    <a href="/profile" class="nav-link"><%= session.user %></a>
+                    <% end %>
+                </div>
             </div>
         </nav>
         <div class="container">

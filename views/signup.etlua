@@ -1,0 +1,25 @@
+<h1>Signup</h1>
+<form action="<%- url_for('signup') %>" method="POST">
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="username">Username:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="username" name="username" required></div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="password">Password:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="password" id="password" name="password" required></div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="email">Email:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="email" name="email"></div>
+    </div>
+    <% if errors then %>
+    <div class="text-bg-danger container pt-3 pb-1 px-4 mb-3 rounded-pill">
+        <ul>
+        <% for _, error_msg in pairs(errors) do %>
+            <li><%= error_msg %></li>
+        <% end %>
+        </ul>
+    </div>
+    <% end %>
+    <button type="submit" class="form-control">Submit</button>
+</form>
