@@ -1,0 +1,39 @@
+<form action="<%- url_for("update_cart", {cart = cart_id}) %>" method="POST" enctype="multipart/form-data" id="update_form">
+    <h1>Update</h1>
+    <hr>
+    <h2>Cartridge</h2>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="cart">TIC-80 cartridge file:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="file" id="cart" name="cart"></div>
+    </div>
+    <hr>
+    <h2>Metadata</h2>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="title">Title:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="title" name="title" value="<%- cart.title:gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="author">Author:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="author" name="author" value="<%- cart.author:gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
+    </div>
+    <div class="mb-3 row">
+        <div class="col-sm-2"><label class="col-form-label" for="desc">Short description:</label></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="desc" name="desc" value="<%- cart.desc:gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label" for="long_desc">Long description:</label>
+        <textarea class="form-control" id="long_desc" name="long_desc"><%= cart.long_desc %></textarea>
+        <p class="form-text">The long description will only be shown on the website.</p>
+    </div>
+    <input type="hidden" name="csrf_token" value="<%- csrf_token %>" class="d-none">
+    <% if errors then %>
+    <div class="text-bg-danger container pt-3 pb-1 px-4 mb-3 rounded-pill">
+        <ul>
+        <% for _, error_msg in pairs(errors) do %>
+            <li><%= error_msg %></li>
+        <% end %>
+        </ul>
+    </div>
+    <% end %>
+    <button type="submit" class="btn btn-default btn-primary">Submit</button>
+</form>

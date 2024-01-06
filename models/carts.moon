@@ -7,3 +7,5 @@ class Carts extends Model
             if ret
                 return ret
         return {username: 'missingno', link_to: => '#'}
+    _update: (...) =>
+        super\update(...)

@@ -1,6 +1,7 @@
 lapis = require "lapis"
 tic_api = require "tic.api"
 upload = require "tic.upload"
+update = require "tic.update"
 delete = require "tic.delete"
 signup = require "users.signup"
 signin = require "users.signin"
@@ -44,6 +45,41 @@ class extends lapis.Application
             @user = user[1]
             @page = "create"
             upload @
+    }
+    [update_cart: "/update/:cart[0-9A-Za-z]"]: respond_to {
+        GET: =>
+            @csrf_token = csrf.generate_token @
+            id = b36_to_n(@params.cart)
+            cart = Carts\find id
+            if not cart
+                return @app.handle_404 @
+            cart_id = n_to_b36(id)
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: @url_for "update_cart", {cart: cart_id}}
+            uploader = cart\get_uploader!
+            unless uploader.username == @session.user
+                return status: 403, render: "403"
+            @cart = cart
+            @cart_id = cart_id
+            render: true
+        POST: =>
+            csrf.assert_token @
+            unless @session.user
+                return redirect_to: @url_for 'signin'
+            id = b36_to_n(@params.cart)
+            cart = Carts\find id
+            if not cart
+                return @app.handle_404 @
+            cart_id = n_to_b36(id)
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: @url_for "update_cart", {cart: cart_id}}
+            uploader = cart\get_uploader!
+            unless uploader.username == @session.user
+                return status: 403, render: "403"
+            @cart = cart
+            @cart_id = cart_id
+            @uploader = uploader
+            update @
     }
     [delete_cart: "/delete/:cart[0-9A-Za-z]"]: respond_to {
         GET: =>

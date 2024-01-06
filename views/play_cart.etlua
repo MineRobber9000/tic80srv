@@ -6,10 +6,15 @@
 <p><%- cart.long_desc:gsub("&","&amp;"):gsub("<","&lt;"):gsub("\n","</p><p>") %></p>
 
 <% if is_uploader then %>
+<div class="row justify-content-between">
+<div class="col-1"><p><a class="btn btn-default btn-primary" href="<%- url_for('update_cart',{cart = cart_id}) %>">Update</a></p></div>
+<div class="col-1">
 <form method="POST" action="<%- url_for('delete_cart',{cart = cart_id}) %>">
 <input type="hidden" name="csrf_token" value="<%- csrf_token %>" />
-<button type="submit" class="btn btn-danger">Delete</button>
+<button type="submit" class="btn btn-danger mx-0">Delete</button>
 </form>
+</div>
+</div>
 <% end %>
 
 <script>
