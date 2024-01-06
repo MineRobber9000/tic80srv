@@ -1,8 +1,10 @@
 lapis = require "lapis"
 tic_api = require "tic.api"
 upload = require "tic.upload"
+delete = require "tic.delete"
 signup = require "users.signup"
 signin = require "users.signin"
+csrf = require "lapis.csrf"
 
 import respond_to, capture_errors from require "lapis.application"
 
@@ -42,6 +44,18 @@ class extends lapis.Application
             @page = "create"
             upload @
     }
+    [delete_cart: "/delete/:cart[0-9A-Za-z]"]: respond_to {
+        GET: =>
+            id = b36_to_n(@params.cart)
+            cart = Carts\find id
+            if not cart
+                return @app.handle_404 @
+            redirect_to: @url_for "play_cart", cart: n_to_b36(cart.id)
+        POST: =>
+            unless @session.user
+                return redirect_to: @url_for 'signin'
+            delete @
+    }
     [embed: "/embed"]: => render: true, layout: false
     [embed_cart: "/embed/:cart[0-9A-Za-z]"]: capture_errors {
         =>
@@ -67,10 +81,12 @@ class extends lapis.Application
             cart = Carts\find id
             if not cart
                 return @app.handle_404 @
+            @csrf_token = csrf.generate_token @
             @cart_id = n_to_b36(id)
             @cart = cart
             @uploader = cart\get_uploader!
             @link_to_uploader = @uploader\link_to @
+            @is_uploader = @uploader.username==@session.user
             @page = "play"
             render: true
         on_error: => @app.handle_404 @

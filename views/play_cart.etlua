@@ -5,6 +5,13 @@
 <iframe src="<%- url_for('embed_cart', {cart = cart_id}) %>" style="width: 100%" id="tic80_iframe"></iframe>
 <p><%- cart.long_desc:gsub("&","&amp;"):gsub("<","&lt;"):gsub("\n","</p><p>") %></p>
 
+<% if is_uploader then %>
+<form method="POST" action="<%- url_for('delete_cart',{cart = cart_id}) %>">
+<input type="hidden" name="csrf_token" value="<%- csrf_token %>" />
+<button type="submit" class="btn btn-danger">Delete</button>
+</form>
+<% end %>
+
 <script>
     function resize() {
         let iframe = document.getElementById("tic80_iframe");
