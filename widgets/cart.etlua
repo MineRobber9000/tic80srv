@@ -1,5 +1,5 @@
 <div class="container">
-    <a href="/play/<%= require"utils".n_to_b36(cart.id) %>"><img src="/cart/<%= cart.hash %>/cover.gif" style="image-rendering: pixelated; width: 100%;" class="border border-primary mb-3" /></a>
+    <a href="/play/<%= require"utils".n_to_b36(cart.id) %>"><img src="/cart/<%= cart.hash %>/cover.gif" style="image-rendering: pixelated; width: 100%;" class="border border-bg-tertiary border-3 mb-3" /></a>
     <h3><%= cart.title %></h3>
     <p>by <%= cart.author %></p>
     <p><%= cart.desc %></p>
