@@ -4,6 +4,7 @@ upload = require "tic.upload"
 delete = require "tic.delete"
 signup = require "users.signup"
 signin = require "users.signin"
+sort_queries = require "sort_queries"
 csrf = require "lapis.csrf"
 
 import respond_to, capture_errors from require "lapis.application"
@@ -72,8 +73,22 @@ class extends lapis.Application
         if id = tonumber(@GET.cart)
             cart_id = n_to_b36(tobit(id))
             return redirect_to: @url_for "play_cart", cart: cart_id
+        if sort = @GET.sort
+            if sort==true
+                return render: true
+            query = sort_queries[sort]
+            unless query
+                return @app.handle_404 @
+            @carts_paginated = Carts\paginated query.query, per_page: 30
+            @page = tonumber(@GET.page)
+            if not @page then @page = 1
+            if @page>@carts_paginated\num_pages! then @page = @carts_paginated\num_pages!
+            @page_title = query.name
+            return render: "play_sorted"
         @grab_bag = Carts\select "order by random() limit 3"
-        @page = "play"
+        @categories = {}
+        for key, query in pairs(sort_queries)
+            table.insert(@categories,{:key, name: query.name, sample: Carts\select query.query.." limit 3"})
         render: true
     [play_cart: "/play/:cart[0-9A-Za-z]"]: capture_errors {
         =>

@@ -1,0 +1,27 @@
+<%
+    start = math.min(math.max(1,page-2),paginated:num_pages()-4)
+    _end = math.min(start+4,paginated:num_pages())
+%>
+<ul class="pagination justify-content-center">
+    <% if page>1 then %>
+    <li class="page-item"><a class="page-link" href="<%- url_for('play',nil,{sort = GET.sort, page = page-1}) %>" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+    <% else %>
+    <li class="page-item disabled"><span class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></span></li>
+    <% end %>
+    <% if start>1 then %>
+    <li class="page-item"><a class="page-link" href="<%- url_for('play',nil,{sort = GET.sort, page = 1}) %>">1</a></li>
+    <% if start>2 then %><li class="page-item disabled"><span class="page-link">&hellip;</a></li><% end %>
+    <% end %>
+    <% for i=start,_end do %>
+    <li class="page-item<%= (i==page) and ' active' or ''%>"<%- (i==page) and ' aria-current="page"' or ''%>><a class="page-link" href="<%- url_for('play',nil,{sort = GET.sort, page = i}) %>"><%= i %></a></li>
+    <% end %>
+    <% if _end<paginated:num_pages() then %>
+    <% if _end<(paginated:num_pages()-1) then %><li class="page-item disabled"><span class="page-link">&hellip;</a></li><% end %>
+    <li class="page-item"><a class="page-link" href="<%- url_for('play',nil,{sort = GET.sort, page = paginated:num_pages()}) %>"><%= paginated:num_pages() %></a></li>
+    <% end %>
+    <% if page<paginated:num_pages() then %>
+    <li class="page-item"><a class="page-link" href="<%- url_for('play',nil,{sort = GET.sort, page = page+1}) %>" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+    <% else %>
+    <li class="page-item disabled"><span class="page-link" aria-label="Next"><span aria-hidden="true">&raquo;</span></span></li>
+    <% end %>
+</ul>

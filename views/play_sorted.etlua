@@ -1,0 +1,4 @@
+<h1>Play &gt; <%= page_title %></h1>
+<% if carts_paginated:num_pages()>1 then render("widgets.pagination",{paginated=carts_paginated,page=page}) end %>
+<% render("widgets.cart_list",{carts=carts_paginated:get_page(page)}) %>
+<% if carts_paginated:num_pages()>1 then render("widgets.pagination",{paginated=carts_paginated,page=page}) end %>
