@@ -48,7 +48,7 @@ class extends lapis.Application
             id = b36_to_n(@params.cart)
             cart = Carts\find id
             if not cart
-                @app.handle_404 @
+                return @app.handle_404 @
             @cart = cart
             layout: false, render: true
         on_error: => @app.handle_404 @
