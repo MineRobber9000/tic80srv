@@ -1,0 +1,21 @@
+<iframe src="/embed<%- (cart_id and "/"..cart_id or "")%>" style="width: 100%" id="tic80_iframe"></iframe>
+
+<script>
+    let iframe = document.getElementById("tic80_iframe");
+    function resize() {
+        iframe.style.height = iframe.clientWidth * 144 / 256 + 'px';
+    }
+
+    resize();
+
+    let navbarSticky = true
+    function unstickyNavbar() {
+        if (navbarSticky) document.querySelector(".navbar").classList.remove('sticky-top');
+        navbarSticky = false;
+    }
+
+    window.addEventListener('resize', resize);
+    iframe.onload = function() {
+        iframe.contentDocument.addEventListener('click', unstickyNavbar);
+    }
+</script>

@@ -2,7 +2,7 @@
 <h2>by <%= cart.author %></h2>
 <h2>uploaded by <%if link_to_uploader~='#' then %><a href="<%= link_to_uploader %>"><%= uploader.username %></a><% else %><%= uploader.username %><% end %></h2>
 <p><%= cart.desc %></p>
-<iframe src="<%- url_for('embed_cart', {cart = cart_id}) %>" style="width: 100%" id="tic80_iframe"></iframe>
+<% render("widgets.embed",{cart_id = cart_id}) %>
 <p><%- cart.long_desc:gsub("&","&amp;"):gsub("<","&lt;"):gsub("\n","</p><p>") %></p>
 
 <% if is_uploader then %>
@@ -16,23 +16,3 @@
 </div>
 </div>
 <% end %>
-
-<script>
-    let iframe = document.getElementById("tic80_iframe");
-    function resize() {
-        iframe.style.height = iframe.clientWidth * 144 / 256 + 'px';
-    }
-
-    resize();
-
-    let navbarSticky = true
-    function unstickyNavbar() {
-        if (navbarSticky) document.querySelector(".navbar").classList.remove('sticky-top');
-        navbarSticky = false;
-    }
-
-    window.addEventListener('resize', resize);
-    iframe.onload = function() {
-        iframe.contentDocument.addEventListener('click', unstickyNavbar);
-    }
-</script>
