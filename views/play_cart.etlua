@@ -18,12 +18,21 @@
 <% end %>
 
 <script>
+    let iframe = document.getElementById("tic80_iframe");
     function resize() {
-        let iframe = document.getElementById("tic80_iframe");
         iframe.style.height = iframe.clientWidth * 144 / 256 + 'px';
     }
 
     resize();
 
+    let navbarSticky = true
+    function unstickyNavbar() {
+        if (navbarSticky) document.querySelector(".navbar").classList.remove('sticky-top');
+        navbarSticky = false;
+    }
+
     window.addEventListener('resize', resize);
+    iframe.onload = function() {
+        iframe.contentDocument.addEventListener('click', unstickyNavbar);
+    }
 </script>
