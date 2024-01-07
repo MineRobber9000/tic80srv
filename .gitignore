@@ -1,4 +1,5 @@
 *.lua
+!libs/*.lua
 *_temp/
 cart/*
 !cart/.gitkeep
