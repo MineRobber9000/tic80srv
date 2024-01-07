@@ -1,4 +1,4 @@
-<iframe src="/embed<%- (cart_id and "/"..cart_id or "")%>" style="width: 100%" id="tic80_iframe"></iframe>
+<iframe src="/embed<%- (cart_id and "/"..cart_id or "")%>" style="width: 90%; margin: 0 5%" id="tic80_iframe"></iframe>
 
 <script>
     let iframe = document.getElementById("tic80_iframe");
