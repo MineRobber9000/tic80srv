@@ -11,10 +11,12 @@ gen_listing = (folders, files) ->
     return out
 
 dir_queries = {
-    "": "order by [update] desc limit 5",
-    "New": "order by creation desc",
-    "Recent": "order by [update] desc"
+    "": "order by [update] desc limit 5"
 }
+
+sort_queries = require"sort_queries"
+for k,v in pairs(sort_queries)
+    dir_queries[v.name] = v.query
 
 get_subdirs = (dir) ->
     there = {}
