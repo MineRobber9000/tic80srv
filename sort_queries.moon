@@ -8,5 +8,9 @@
     recent: {
         query: "order by [update] desc",
         name: "Recent"
+    },
+    popular: {
+        query: "order by score desc, creation desc",
+        name: "Popular"
     }
 }

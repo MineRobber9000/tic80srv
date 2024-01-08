@@ -4,6 +4,7 @@ import Carts, Users from require "models"
 require"lfs"
 import rmdir from lfs
 csrf = require "lapis.csrf"
+refresh_scores = require "refresh_scores"
 
 capture_errors {
     =>
@@ -20,6 +21,7 @@ capture_errors {
         os.remove "cart/#{cart.hash}/#{cart.filename}"
         lfs.rmdir "cart/#{cart.hash}"
         cart\delete!
+        refresh_scores!
         redirect_to: @url_for "profile"
     on_error: =>
         redirect_to: @url_for "play_cart", cart: @params.cart

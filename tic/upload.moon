@@ -6,6 +6,7 @@ import Carts from require "models"
 require"lfs"
 import mkdir from lfs
 get_metadata = require "tic.metatags"
+refresh_scores = require "refresh_scores"
 
 capture_errors =>
     assert_valid @POST, {
@@ -48,6 +49,7 @@ capture_errors =>
         update: now,
         uploader_id: @user\rowid!
     }
+    refresh_scores!
     mkdir("cart/#{hash}")
     write_file("cart/#{hash}/#{save_filename}",file.content)
     copy_file("cover.gif","cart/#{hash}/cover.gif")

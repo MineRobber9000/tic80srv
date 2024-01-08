@@ -63,4 +63,11 @@ import query from require "lapis.db"
             "CONSTRAINT fk_user FOREIGN KEY (user) REFERENCES users (rowid)",
             "CONSTRAINT fk_cart FOREIGN KEY (cart) REFERENCES carts (id)"
         }
+    [1704716466]: =>
+        query "ALTER TABLE carts ADD COLUMN score INTEGER NOT NULL DEFAULT 0"
+
+        Carts = require"models".Carts
+        now = os.time!
+        for cart in *(Carts\select "where 1=1")
+            cart\update_score now
 }

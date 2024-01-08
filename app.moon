@@ -8,6 +8,7 @@ signin = require "users.signin"
 sort_queries = require "sort_queries"
 csrf = require "lapis.csrf"
 markdown = require "libs.markdown"
+refresh_scores = require "refresh_scores"
 
 import respond_to, capture_errors, yield_error from require "lapis.application"
 
@@ -162,6 +163,7 @@ class extends lapis.Application
                 return redirect_to: @url_for "signin", nil, {return_to: @url_for "play_cart", cart: cart_id_normalized}
             user = Users\get_one "where username = ?", @session.user
             Favorites\favorite user\rowid!, cart.id
+            refresh_scores!
             redirect_to: @url_for "play_cart", cart: cart_id_normalized
         on_error: => redirect_to: @url_for "play_cart", cart: @params.cart
     }
@@ -177,6 +179,7 @@ class extends lapis.Application
                 return redirect_to: @url_for "signin", nil, {return_to: @url_for "play_cart", cart: cart_id_normalized}
             user = Users\get_one "where username = ?", @session.user
             Favorites\unfavorite user\rowid!, cart.id
+            refresh_scores!
             redirect_to: @url_for "play_cart", cart: cart_id_normalized
         on_error: => redirect_to: @url_for "play_cart", cart: @params.cart
     }
