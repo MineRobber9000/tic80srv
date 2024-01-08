@@ -22,7 +22,7 @@
     </div>
     <div class="mb-3">
         <label class="form-label" for="long_desc">Long description:</label>
-        <textarea class="form-control" id="long_desc" name="long_desc"><%= cart.long_desc %></textarea>
+        <textarea class="form-control h-100" id="long_desc" name="long_desc" rows=10><%= cart.long_desc %></textarea>
         <p class="form-text">The long description will only be shown on the website.</p>
     </div>
     <input type="hidden" name="csrf_token" value="<%- csrf_token %>" class="d-none">
