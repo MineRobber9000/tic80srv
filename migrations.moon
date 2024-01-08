@@ -43,4 +43,16 @@ import query from require "lapis.db"
         query "DROP TABLE _carts_old;"
         query "COMMIT;"
         query "PRAGMA foreign_keys=on;"
+    [1704697001]: =>
+        create_table "comments", {
+            {"id", types.integer(primary_key: true)},
+            {"user", types.integer},
+            {"cart", types.integer},
+            {"text", types.text},
+            {"time", types.text},
+            {"edited",types.integer(default: 0)}
+
+            "CONSTRAINT fk_user FOREIGN KEY (user) REFERENCES users (rowid)",
+            "CONSTRAINT fk_cart FOREIGN KEY (cart) REFERENCES carts (id)"
+        }
 }

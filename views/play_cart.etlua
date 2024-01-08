@@ -4,6 +4,7 @@
 <p><%= cart.desc %></p>
 <% render("widgets.embed",{cart_id = cart_id}) %>
 <% render("widgets.markdown",{text = cart.long_desc}) %>
+<p><a href="<%- url_for("cart_comments",{cart=cart_id}) %>">View <%= #comments %> comment<%= (#comments==1 and "" or "s") %></a></p>
 
 <% if is_uploader then %>
 <div class="row justify-content-between">

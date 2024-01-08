@@ -9,12 +9,12 @@ sort_queries = require "sort_queries"
 csrf = require "lapis.csrf"
 markdown = require "libs.markdown"
 
-import respond_to, capture_errors from require "lapis.application"
+import respond_to, capture_errors, yield_error from require "lapis.application"
 
 import b36_to_n, n_to_b36 from require "utils"
 import tobit from require "bit"
 
-import Carts, Users from require "models"
+import Carts, Users, Comments from require "models"
 
 class extends lapis.Application
     @enable "etlua"
@@ -139,9 +139,98 @@ class extends lapis.Application
             @uploader = cart\get_uploader!
             @link_to_uploader = @uploader\link_to @
             @is_uploader = @uploader.username==@session.user
+            @comments = Comments\get_comments_for_cart id
             @page = "play"
             render: true
         on_error: => @app.handle_404 @
+    }
+    [cart_comments: "/comments/:cart[0-9A-Za-z]"]: capture_errors {
+        =>
+            id = b36_to_n(@params.cart)
+            cart = Carts\find id
+            if not cart
+                return @app.handle_404 @
+            @csrf_token = csrf.generate_token @
+            @cart_id = n_to_b36(id)
+            @cart = cart
+            @comments = Comments\get_comments_for_cart id
+            @link_to = (user) -> user\link_to @
+            @page = "play"
+            render: true
+        on_error: => @app.handle_404 @
+    }
+    [comment_on: "/comments/:cart[0-9A-Za-z]/add"]: respond_to {
+        POST: =>
+            csrf.assert_token @
+            id = b36_to_n(@params.cart)
+            cart = Carts\find id
+            if not cart
+                return @app.handle_404 @
+            unless @session.user
+                return status: 403, render: "403"
+            cart_id_normalized = n_to_b36(id)
+            @user = Users\get_one "where username = ?", @session.user
+            now = os.date("!%Y-%m-%dT%H:%M:%SZ")
+            Comments\create {
+                id: Comments\next_id!
+                user: @user\rowid!
+                cart: id
+                text: @POST.text
+                time: now
+            }
+            return redirect_to: @url_for "cart_comments", cart: cart_id_normalized
+    }
+    [comment_edit: "/comments/:cart[0-9A-Za-z]/edit/:id[0-9]"]: respond_to {
+        GET: capture_errors =>
+            @csrf_token = csrf.generate_token @
+            id = tonumber(@params.id)
+            unless id
+                return @app.handle_404 @
+            @comment = Comments\find id
+            unless id
+                return @app.handle_404 @
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: (@url_for "comment_edit", cart: @params.cart, id: id)}
+            @user = Users\get_one "where username = ?", @session.user
+            unless @user\rowid! == @comment.user
+                return status: 403, render: "403"
+            render: true
+        POST: capture_errors =>
+            csrf.assert_token @
+            id = tonumber(@params.id)
+            unless id
+                return @app.handle_404 @
+            @comment = Comments\find id
+            unless @comment
+                return @app.handle_404 @
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: (@url_for "comment_edit", cart: @params.cart, id: id)}
+            @user = Users\get_one "where username = ?", @session.user
+            unless @user\rowid! == @comment.user
+                return status: 403, render: "403"
+            @comment\update {
+                text: @params.text
+                edited: 1
+            }
+            redirect_to: @url_for "cart_comments", cart: n_to_b36(@comment\get_cart!.id)
+    }
+    [comment_delete: "/comments/:cart[0-9A-Za-z]/delete/:id[0-9]"]: capture_errors {
+        =>
+            csrf.assert_token @
+            id = tonumber(@params.id)
+            unless id
+                return @app.handle_404 @
+            @comment = Comments\find id
+            unless @comment
+                return @app.handle_404 @
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: (@url_for "comment_edit", cart: @params.cart, id: id)}
+            @user = Users\get_one "where username = ?", @session.user
+            unless @user\rowid! == @comment.user
+                return status: 403, render: "403"
+            @comment\delete!
+            redirect_to: @url_for "cart_comments", cart: n_to_b36(@comment\get_cart!.id)
+        on_error: => render: "comment_edit"
     }
     [signin: "/signin"]: respond_to {
         GET: => render: true,

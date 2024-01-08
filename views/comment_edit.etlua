@@ -1,0 +1,18 @@
+<% if not comment then comment = {} end %>
+<h1>Editing comment #<%= comment.id %></h1>
+<form method="POST" action="<%- url_for("comment_edit",{cart=params.cart,id=comment.id}) %>">
+<label for="text" class="form-label">Comment:</label>
+<textarea class="form-control h-100" rows=5 id="text" name="text"><%= comment.text %></textarea>
+<input type="hidden" class="d-none" name="csrf_token" value="<%= csrf_token %>">
+<p class="form-text">Use Markdown for formatting.</p>
+<% if errors then %>
+<div class="text-bg-danger container pt-3 pb-1 px-4 mb-3 rounded-pill">
+    <ul>
+    <% for _, error_msg in pairs(errors) do %>
+        <li><%= error_msg %></li>
+    <% end %>
+    </ul>
+</div>
+<% end %>
+<button type="submit" class="btn btn-primary">Save comment</button> <a href="<%- url_for("comment_delete",{cart=params.cart,id=comment.id},{csrf_token=csrf_token}) %>" class="btn btn-danger">Delete comment</a>
+</form>

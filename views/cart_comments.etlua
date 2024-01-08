@@ -1,0 +1,16 @@
+<h1>Comments for <a href="<%- url_for("play_cart",{cart=cart_id}) %>"><%= cart.title %></a></h1>
+<hr>
+<% for _, comment in ipairs(comments) do %>
+<div>
+<p id="comment-<%= comment.id %>"><a href="<%- url_for("user_profile", {username=comment:get_commenter().username}) %>"><%= comment:get_commenter().username %></a> &ndash; <%= (comment.time:gsub("(%d)T(%d)",function(o,t) return o.." "..t end):gsub("Z$","")) %><%- (comment.edited==1 and "<span title='(edited)'>*</span>" or "") %> &ndash; <a href="#comment-<%= comment.id %>">#<%= comment.id %></a><% if session.user==comment:get_commenter().username then %> &ndash; <a href="<%- url_for("comment_edit",{cart=cart_id,id=comment.id}) %>">(edit)</a><% end %></p>
+<% render("widgets.markdown",{text=comment.text}) %>
+</div>
+<hr>
+<% end %>
+<form method="POST" action="<%- url_for("comment_on",{cart=cart_id}) %>">
+<label for="text" class="form-label">Comment:</label>
+<textarea class="form-control h-100" rows=5 id="text" name="text"></textarea>
+<input type="hidden" class="d-none" name="csrf_token" value="<%= csrf_token %>">
+<p class="form-text">Use Markdown for formatting.</p>
+<button type="submit" class="btn btn-primary">Add comment</button>
+</form>
