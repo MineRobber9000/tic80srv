@@ -126,6 +126,7 @@ class extends lapis.Application
         @categories = {}
         for key, query in pairs(sort_queries)
             table.insert(@categories,{:key, name: query.name, sample: Carts\select query.query.." limit 3"})
+        table.sort @categories, (a, b) -> a.key<b.key
         render: true
     [play_cart: "/play/:cart[0-9A-Za-z]"]: capture_errors {
         =>
