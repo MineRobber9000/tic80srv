@@ -3,7 +3,7 @@
 <h2>uploaded by <%if link_to_uploader~='#' then %><a href="<%= link_to_uploader %>"><%= uploader.username %></a><% else %><%= uploader.username %><% end %></h2>
 <p><%= cart.desc %></p>
 <% render("widgets.embed",{cart_id = cart_id}) %>
-<p><%- cart.long_desc:gsub("&","&amp;"):gsub("<","&lt;"):gsub("\n","</p><p>") %></p>
+<% render("widgets.markdown",{text = cart.long_desc}) %>
 
 <% if is_uploader then %>
 <div class="row justify-content-between">

@@ -7,6 +7,7 @@ signup = require "users.signup"
 signin = require "users.signin"
 sort_queries = require "sort_queries"
 csrf = require "lapis.csrf"
+markdown = require "libs.markdown"
 
 import respond_to, capture_errors from require "lapis.application"
 
