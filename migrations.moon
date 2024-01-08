@@ -55,4 +55,12 @@ import query from require "lapis.db"
             "CONSTRAINT fk_user FOREIGN KEY (user) REFERENCES users (rowid)",
             "CONSTRAINT fk_cart FOREIGN KEY (cart) REFERENCES carts (id)"
         }
+    [1704708430]: =>
+        create_table "favorites", {
+            {"user", types.integer},
+            {"cart", types.integer}
+
+            "CONSTRAINT fk_user FOREIGN KEY (user) REFERENCES users (rowid)",
+            "CONSTRAINT fk_cart FOREIGN KEY (cart) REFERENCES carts (id)"
+        }
 }

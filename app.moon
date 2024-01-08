@@ -14,7 +14,7 @@ import respond_to, capture_errors, yield_error from require "lapis.application"
 import b36_to_n, n_to_b36 from require "utils"
 import tobit from require "bit"
 
-import Carts, Users, Comments from require "models"
+import Carts, Users, Comments, Favorites from require "models"
 
 class extends lapis.Application
     @enable "etlua"
@@ -139,10 +139,45 @@ class extends lapis.Application
             @uploader = cart\get_uploader!
             @link_to_uploader = @uploader\link_to @
             @is_uploader = @uploader.username==@session.user
+            @user_favorited = false
+            if @session.user
+                user = Users\get_one "where username = ?", @session.user
+                @user_favorited = Favorites\already_favorited user\rowid!, id
+            @favorites = #(Favorites\by_cart id)
             @comments = Comments\get_comments_for_cart id
             @page = "play"
             render: true
         on_error: => @app.handle_404 @
+    }
+    [favorite_cart: "/favorite/:cart[0-9A-Za-z]"]: capture_errors {
+        =>
+            csrf.assert_token @
+            id = b36_to_n(@params.cart)
+            cart = Carts\find id
+            if not cart
+                return @app.handle_404 @
+            cart_id_normalized = n_to_b36(id)
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: @url_for "play_cart", cart: cart_id_normalized}
+            user = Users\get_one "where username = ?", @session.user
+            Favorites\favorite user\rowid!, cart.id
+            redirect_to: @url_for "play_cart", cart: cart_id_normalized
+        on_error: => redirect_to: @url_for "play_cart", cart: @params.cart
+    }
+    [unfavorite_cart: "/unfavorite/:cart[0-9A-Za-z]"]: capture_errors {
+        =>
+            csrf.assert_token @
+            id = b36_to_n(@params.cart)
+            cart = Carts\find id
+            if not cart
+                return @app.handle_404 @
+            cart_id_normalized = n_to_b36(id)
+            unless @session.user
+                return redirect_to: @url_for "signin", nil, {return_to: @url_for "play_cart", cart: cart_id_normalized}
+            user = Users\get_one "where username = ?", @session.user
+            Favorites\unfavorite user\rowid!, cart.id
+            redirect_to: @url_for "play_cart", cart: cart_id_normalized
+        on_error: => redirect_to: @url_for "play_cart", cart: @params.cart
     }
     [cart_comments: "/comments/:cart[0-9A-Za-z]"]: capture_errors {
         =>
@@ -249,12 +284,31 @@ class extends lapis.Application
         @user = Users\get_one "where username = ?", @session.user
         @recent_carts = @user\get_carts!
         render: true
+    [favorites: "/favorites"]: =>
+        if not @session.user
+            return redirect_to: @url_for "signin", nil, {return_to: @url_for "favorites"}
+        @user = Users\get_one "where username = ?", @session.user
+        favorites = Favorites\by_user @user\rowid!
+        @favorite_carts = {}
+        for favorite in *favorites
+            table.insert(@favorite_carts,favorite\get_cart!)
+        render: true    
     [user_profile: "/user/:username"]: =>
         users = Users\select "where username = ?", @params.username
         @user = users[1]
         unless @user
             return @app.handle_404 @
         @recent_carts = @user\get_carts!
+        render: true
+    [user_favorites: "/user/:username/favorites"]: =>
+        users = Users\select "where username = ?", @params.username
+        @user = users[1]
+        unless @user
+            return @app.handle_404 @
+        favorites = Favorites\by_user @user\rowid!
+        @favorite_carts = {}
+        for favorite in *favorites
+            table.insert(@favorite_carts,favorite\get_cart!)
         render: true
     [info: "/info/:cart[0-9A-Za-z]"]: capture_errors {
         =>

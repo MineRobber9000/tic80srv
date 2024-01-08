@@ -3,6 +3,15 @@
 <h2>uploaded by <%if link_to_uploader~='#' then %><a href="<%= link_to_uploader %>"><%= uploader.username %></a><% else %><%= uploader.username %><% end %></h2>
 <p><%= cart.desc %></p>
 <% render("widgets.embed",{cart_id = cart_id}) %>
+<% if is_uploader then %>
+<p><img src="/static/assets/favorited.png" style="width: 32px; height: 32px"> <%= favorites %></p>
+<% else %>
+<% if user_favorited then %>
+<p><a href="<%- url_for("unfavorite_cart",{cart=cart_id},{csrf_token=csrf_token}) %>" aria-label="Unfavorite" class="favorite"><img src="/static/assets/favorited.png" class="default" /><img src="/static/assets/not_favorited.png" class="hover" /></a> <%= favorites %></p>
+<% else %>
+<p><a href="<%- url_for("favorite_cart",{cart=cart_id},{csrf_token=csrf_token}) %>" aria-label="Favorite" class="favorite"><img src="/static/assets/not_favorited.png" class="default" /><img src="/static/assets/favorited.png" class="hover" /></a> <%= favorites %></p>
+<% end %>
+<% end %>
 <% render("widgets.markdown",{text = cart.long_desc}) %>
 <h3>Comments:</h3>
 <hr>
