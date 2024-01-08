@@ -5,8 +5,9 @@
 
 Before running for the first time, run `lapis migrate` to create the DB.
 
-In its current state, it's just about enough to upload carts (no account system
-yet) and have them playable from inside TIC-80.
+In its current state, it's just about got feature parity with the original
+site, save for the categories (which will be implemented as a tagging
+system when they do get implemented).
 
 [lapis]: https://github.com/leafo/lapis
 [moonscript]: https://github.com/leafo/moonscript
@@ -39,10 +40,13 @@ Finally, start up the server:
 make server
 ```
 
-To upload carts, navigate to `http://localhost:8080/upload`. Note that only
-`.tic` cartridges can be uploaded at the moment, and covers will not work in
-`surf` (they all show the "this a test lmao" cover; eventually the `cover.gif`
-will be programmatically created from the cart).
+To use the site, navigate to `http://localhost:8080`. To upload carts, start
+by creating an account. Either go to `http://localhost:8080/signup` directly,
+or you can click "sign in" on the navbar to get to the signin page, from which
+you can click a link to sign up. Enter a username and password, click "sign up",
+and you should be back at the homepage. Click on your username, which should
+take you to your profile page, then click the "upload" button in the bottom left
+corner.
 
 [openresty]: https://openresty.org/en/download.html
 [luarocks]: https://luarocks.org/#quick-start
