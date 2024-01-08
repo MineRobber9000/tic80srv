@@ -12,7 +12,8 @@ gen_listing = (folders, files) ->
 
 dir_queries = {
     "": "order by [update] desc limit 5",
-    "New": "order by creation desc"
+    "New": "order by creation desc",
+    "Recent": "order by [update] desc"
 }
 
 get_subdirs = (dir) ->
