@@ -12,12 +12,13 @@ gen_listing = (folders, files) ->
 
 dir_queries = {
     "": "order by [update] desc limit 5",
+    "Play": "where 0==1"
     "Devs": "where 1==1" -- dummy query; when you cd into Devs, it'll run its own code
 }
 
 sort_queries = require"sort_queries"
 for k,v in pairs(sort_queries)
-    dir_queries[v.name] = v.query
+    dir_queries["Play/"..v.name] = v.query
 
 get_subdirs = (dir) ->
     there = {}
@@ -30,6 +31,7 @@ get_subdirs = (dir) ->
     dirs = {}
     for k,v in pairs(there)
         table.insert(dirs,k)
+    table.sort(dirs)
     dirs
 
 dir_listing = (dir) =>
