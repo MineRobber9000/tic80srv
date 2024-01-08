@@ -6,6 +6,9 @@ allowed_tags = {
     ["h1"]: true
     ["h2"]: true
     ["h3"]: true
+    ["h4"]: true
+    ["h5"]: true
+    ["h6"]: true
     ["em"]: true
     ["ul"]: true
     ["ol"]: true
@@ -33,6 +36,9 @@ replace_tags = setmetatable {
     ["h1"]: "h4",
     ["h2"]: "h5",
     ["h3"]: "h6"
+    ["h4"]: "p class='mb-1'"
+    ["h5"]: "p class='mb-1'"
+    ["h6"]: "p class='mb-1'"
 }, {
     ["__index"]: (k) =>
         return k
