@@ -27,7 +27,7 @@ determine_comment = (text) ->
     return "#" if value_in(metatag(text,"script","#"),{"janet","ruby","python"})
     return "//" if value_in(metatag(text,"script","//"),{"js","squirrel","wren"})
     return "--" if value_in(metatag(text,"script","--"),{"lua","moon","wasm"})
-    return ";;" if metatag(text,"script",";")=="scheme"
+    return ";;" if metatag(text,"script",";;")=="scheme"
     return "--" -- default to Lua
 
 -- there are others but these are the metadata tags we care about
