@@ -22,7 +22,7 @@ class extends lapis.Application
 
     layout: "layout"
 
-    tic80_version: "1.1.2837"
+    tic80_version: "1.2.3086"
 
     [home: "/"]: =>
         @page = "home"
@@ -332,7 +332,7 @@ class extends lapis.Application
             }
         on_error: => @app.handle_404 @
     }
-    "/api": =>
+    "/json": =>
         tic_api @
     handle_404: =>
         @write layout: "layout"

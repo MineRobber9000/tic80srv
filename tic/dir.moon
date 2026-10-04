@@ -1,13 +1,11 @@
 import Carts, Users from require"models"
+json = require "cjson"
 
 gen_listing = (folders, files) ->
-    out = "folders =\n{\n"
-    for folder in *folders
-        out ..= "\t{ name = #{string.format('%q',folder)} },\n"
-    out ..= "\n}\n\nfiles =\n{\n"
-    for file in *files
-        out ..= "\t{ name = #{string.format('%q',file.name..'.tic')}, hash = #{string.format('%q',file.hash)}, id = #{file.id}, filename = #{string.format('%q',file.filename)} },\n"
-    out ..="\n}"
+    folder_objs = {}
+    for _, folder in ipairs(folders) do
+        table.insert(folder_objs, {name:folder})
+    out = json.encode({folders:folder_objs, :files})
     return out
 
 dir_queries = {
@@ -49,7 +47,7 @@ dir_listing = (dir) =>
         files = {}
         for cart in *carts
             file = {}
-            file.name = cart.title
+            file.name = cart.title .. ".tic"
             file.hash = cart.hash
             file.id = cart.id
             file.filename = cart.filename
@@ -73,7 +71,7 @@ dir_listing = (dir) =>
         files = {}
         for cart in *carts
             file = {}
-            file.name = cart.title
+            file.name = cart.title .. ".tic"
             file.hash = cart.hash
             file.id = cart.id
             file.filename = cart.filename
@@ -85,7 +83,7 @@ dir_listing = (dir) =>
     carts = Carts\select query
     for cart in *carts
         file = {}
-        file.name = cart.title
+        file.name = cart.title .. ".tic"
         file.hash = cart.hash
         file.id = cart.id
         file.filename = cart.filename
