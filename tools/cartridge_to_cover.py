@@ -42,8 +42,8 @@ while i<len(cart):
         elif chunk_type==18:
             has_cover = True
             ts = size
-            if ts<16320: ts=16320
             screen = bytearray(b''.join(struct.unpack_from(str(ts)+'c',cart,i)))
+            screen.extend([0 for _ in range(16320-len(screen))])
             for j in range(240*136):
                 xy = (j%240,j//240)
                 cover_img.putpixel(xy,peek4(screen,j))
