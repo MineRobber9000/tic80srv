@@ -142,7 +142,7 @@ class extends lapis.Application
             @link_to_uploader = @uploader\link_to @
             @is_uploader = @uploader.username==@session.user
             @user_favorited = false
-            if @session.user
+            if not @is_uploader and @session.user
                 user = Users\get_one "where username = ?", @session.user
                 @user_favorited = Favorites\already_favorited user\rowid!, id
             @favorites = #(Favorites\by_cart id)
