@@ -11,11 +11,11 @@ gen_salt = ->
     out
 
 salt_exists = (salt) ->
-    same_salt = Users\select "where salt = ?", salt
+    same_salt = Users\select "where salt = ? limit 1", salt
     #same_salt > 0
 
 username_exists = (username) ->
-    same_username = Users\select "where username = ?", username
+    same_username = Users\select "where username = ? limit 1", username
     #same_username > 0
 
 capture_errors =>
