@@ -10,15 +10,15 @@
     <h2>Metadata</h2>
     <div class="mb-3 row">
         <div class="col-sm-2"><label class="col-form-label" for="title">Title:</label></div>
-        <div class="col-sm-10"><input class="form-control" type="text" id="title" name="title" value="<%- cart.title:gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="title" name="title" value="<%- cart.title:gsub('&','&amp;'):gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
     </div>
     <div class="mb-3 row">
         <div class="col-sm-2"><label class="col-form-label" for="author">Author:</label></div>
-        <div class="col-sm-10"><input class="form-control" type="text" id="author" name="author" value="<%- cart.author:gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="author" name="author" value="<%- cart.author:gsub('&','&amp;'):gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
     </div>
     <div class="mb-3 row">
         <div class="col-sm-2"><label class="col-form-label" for="desc">Short description:</label></div>
-        <div class="col-sm-10"><input class="form-control" type="text" id="desc" name="desc" value="<%- cart.desc:gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
+        <div class="col-sm-10"><input class="form-control" type="text" id="desc" name="desc" value="<%- cart.desc:gsub('&','&amp;'):gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
     </div>
     <div class="mb-3">
         <label class="form-label" for="long_desc">Long description:</label>
