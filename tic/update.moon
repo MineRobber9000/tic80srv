@@ -57,4 +57,9 @@ capture_errors =>
                 :long_desc,
                 update: now
             }
+    for _, tag in ipairs(@tags)
+        if @POST["tag"..tag.name]
+            @cart\add_tag tag
+        else
+            @cart\remove_tag tag
     redirect_to: @url_for "play_cart", cart: @cart_id

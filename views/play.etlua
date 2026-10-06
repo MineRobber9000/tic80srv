@@ -1,7 +1,9 @@
 <h1>Play</h1>
 <h2>Grab Bag</h2>
+<p>A quick selection of 3 random carts, for your pleasure.</p>
 <% render("widgets.cart_list", {carts = grab_bag}) %>
-<% for i=1,#categories do local category = categories[i] %>
-<h2><a href="<%- url_for('play',nil,{sort=category.key}) %>" class="link"><%= category.name %></a></h2>
-<% render("widgets.cart_list", {carts = category.sample}) %>
+<% for _, tag in ipairs(tags) do %>
+<h2><a href="<%- url_for('play',nil,{tag=tag.id}) %>" class="link"><%= tag.name %></a></h2>
+<p><%= tag.description %></p>
+<% render("widgets.cart_list", {carts = tag.sample}) %>
 <% end %>

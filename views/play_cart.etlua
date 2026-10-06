@@ -1,7 +1,13 @@
 <h1><%= cart.title %></h1>
 <h2>by <%= cart.author %></h2>
 <h2>uploaded by <%if link_to_uploader~='#' then %><a href="<%= link_to_uploader %>"><%= uploader.username %></a><% else %><%= uploader.username %><% end %></h2>
-<p><%= cart.desc %></p>
+<% tags = cart:get_tags() %>
+<p<%- #tags>0 and ' class="mb-0"' or ""%>><%= cart.desc %></p>
+<% if #tags > 0 then %>
+<% local tag_names = {} %>
+<% for _, tag in ipairs(tags) do table.insert(tag_names, tag.name) end %>
+<p>Tags: <%= table.concat(tag_names, ", ") %></p>
+<% end %>
 <% render("widgets.embed",{cart_id = cart_id}) %>
 <% if is_uploader then %>
 <p><img src="/static/assets/favorited.png" style="width: 32px; height: 32px"> <%= favorites %></p>
@@ -32,7 +38,7 @@
 
 <% if is_uploader then %>
 <div class="row justify-content-between">
-<div class="col-1"><p><a class="btn btn-default btn-primary" href="<%- url_for('update_cart',{cart = cart_id}) %>">Update cart</a></p></div>
+<div class="col-2"><p><a class="btn btn-default btn-primary" href="<%- url_for('update_cart',{cart = cart_id}) %>">Update cart</a></p></div>
 <div class="col-1">
 <form method="POST" action="<%- url_for('delete_cart',{cart = cart_id}) %>">
 <input type="hidden" name="csrf_token" value="<%- csrf_token %>" />

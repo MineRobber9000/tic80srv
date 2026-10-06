@@ -28,8 +28,12 @@ dir_queries = {
 }
 
 sort_queries = require"sort_queries"
-for k,v in pairs(sort_queries)
-    dir_queries["Play/"..v.name] = v.query
+tags = require"models".Tags\select!
+for _,tag in ipairs(tags)
+    query = "INNER JOIN carts_tags ct ON ct.cart = carts.id WHERE ct.tag = #{string.format('%d',tag.id)}"
+    dir_queries["Play/"..tag.name] = query
+    for k,v in pairs(sort_queries)
+        dir_queries["Play/"..tag.name.."/"..v.name] = query.." "..v.query
 
 get_subdirs = (dir) ->
     there = {}

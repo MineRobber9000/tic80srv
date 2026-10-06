@@ -50,4 +50,50 @@ import query from require "lapis.db"
         now = os.time!
         for cart in *(Carts\select "where 1=1")
             cart\update_score now
+
+    [1791256924]: =>
+        create_table "tags", {
+            {"id", types.integer(primary_key: true)},
+            {"name", types.text},
+            {"description", types.text}
+        }
+
+        create_table "carts_tags", {
+            {"cart", types.integer},
+            {"tag", types.integer},
+
+            "CONSTRAINT fk_cart FOREIGN KEY (cart) REFERENCES carts (id)",
+            "CONSTRAINT fk_tag FOREIGN KEY (tag) REFERENCES tags (id)",
+            "PRIMARY KEY (cart, tag)"
+        }
+
+        Tags = require"models".Tags
+        Tags\create {
+            name: "Games",
+            description: "Released games."
+        }
+        Tags\create {
+            name: "Techdemos",
+            description: "Tech demos to show the capabilities of the platform."
+        }
+        Tags\create {
+            name: "Tools",
+            description: "Tools and libraries for carts."
+        }
+        Tags\create {
+            name: "Music",
+            description: "Music and sound effects."
+        }
+        Tags\create {
+            name: "WIP",
+            description: "Work in progress carts."
+        }
+        Tags\create {
+            name: "Demoscene",
+            description: "For demoscene intros/demos."
+        }
+        Tags\create {
+            name: "Livecoding",
+            description: "Carts produced during 10-60 minute coding sessions such as Bytebattles or Bytejams."
+        }
 }

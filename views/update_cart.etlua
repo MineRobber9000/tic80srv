@@ -21,6 +21,18 @@
         <div class="col-sm-10"><input class="form-control" type="text" id="desc" name="desc" value="<%- cart.desc:gsub('&','&amp;'):gsub('<','&lt;'):gsub('>','&gt;'):gsub('"',"&quot;") %>"></div>
     </div>
     <div class="mb-3">
+        <label class="form-label" for="tags">Tags:</label>
+<% local tags_on_cart = cart:get_tags() -%>
+<% for _, tag in ipairs(tags_on_cart) do tags_on_cart[tag.name] = true end -%>
+<% for _, tag in pairs(tags) do -%>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="tag<%- tag.name %>" name="tag<%- tag.name %>"<%- tags_on_cart[tag.name] and " checked" or ""%>>
+            <label class="form-check-label" for="tag<%- tag.name %>"><%= tag.name %> - <%= tag.description %></label>
+        </div>
+<% end -%>
+        <p class="form-text">You can put a cart in as many tags as you think it belongs, but please try not to abuse it.</p>
+    </div>
+    <div class="mb-3">
         <label class="form-label" for="long_desc">Long description:</label>
         <textarea class="form-control h-100" id="long_desc" name="long_desc" rows=10><%= cart.long_desc %></textarea>
         <p class="form-text">The long description will only be shown on the website. Use Markdown for formatting.</p>

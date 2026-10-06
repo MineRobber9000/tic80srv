@@ -15,7 +15,7 @@ import respond_to, capture_errors, yield_error from require "lapis.application"
 import b36_to_n, n_to_b36 from require "utils"
 import tobit from require "bit"
 
-import Carts, Users, Comments, Favorites from require "models"
+import Carts, Users, Comments, Favorites, Tags from require "models"
 
 class extends lapis.Application
     @enable "etlua"
@@ -63,6 +63,7 @@ class extends lapis.Application
                 return status: 403, render: "403"
             @cart = cart
             @cart_id = cart_id
+            @tags = Tags\select!
             render: true
         POST: =>
             csrf.assert_token @
@@ -81,6 +82,7 @@ class extends lapis.Application
             @cart = cart
             @cart_id = cart_id
             @uploader = uploader
+            @tags = Tags\select!
             update @
     }
     [delete_cart: "/delete/:cart[0-9A-Za-z]"]: respond_to {
@@ -111,23 +113,27 @@ class extends lapis.Application
         if id = tonumber(@GET.cart)
             cart_id = n_to_b36(tobit(id))
             return redirect_to: @url_for "play_cart", cart: cart_id
-        if sort = @GET.sort
-            if sort==true
+        if tag_id = @GET.tag
+            tag = Tags\find tag_id
+            unless tag
                 return render: true
-            query = sort_queries[sort]
-            unless query
-                return @app.handle_404 @
-            @carts_paginated = Carts\paginated query.query, per_page: 30
+            sort_query = nil
+            if sort = @GET.sort
+                sort_query = sort_queries[sort]
+            unless sort_query
+                sort_query = sort_queries.popular
+            @carts_paginated = Carts\paginated "INNER JOIN carts_tags ct ON ct.cart = carts.id WHERE ct.tag = ? "..sort_query.query, tag_id, per_page: 30
             @page = tonumber(@GET.page)
             if not @page then @page = 1
             if @page>@carts_paginated\num_pages! then @page = @carts_paginated\num_pages!
-            @page_title = query.name
+            @page_title = tag.name
             return render: "play_sorted"
         @grab_bag = Carts\select "order by random() limit 3"
-        @categories = {}
-        for key, query in pairs(sort_queries)
-            table.insert(@categories,{:key, name: query.name, sample: Carts\select query.query.." limit 3"})
-        table.sort @categories, (a, b) -> a.key<b.key
+        @tags = Tags\select!
+        for _, tag in ipairs(@tags)
+            sample = Carts\select "INNER JOIN carts_tags ct ON ct.cart = carts.id WHERE ct.tag = ? ORDER BY random() LIMIT 3", tag.id
+            tag.sample = sample
+        table.sort @tags, (a, b) -> a.id<b.id
         render: true
     [play_cart: "/play/:cart[0-9A-Za-z]"]: capture_errors {
         =>

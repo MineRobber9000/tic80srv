@@ -1,4 +1,7 @@
 import Model from require "lapis.db.model"
+import query from require "lapis.db"
+models = require "models"
+
 class Carts extends Model
     get_uploader: =>
         if @uploader_id
@@ -34,3 +37,9 @@ class Carts extends Model
         @_update {
             score: math.floor((favorites/(math.max(1,time_delta/timebase))^1.8)*100000)
         }
+    get_tags: =>
+        Tags\select "INNER JOIN carts_tags ct ON ct.tag = tags.id WHERE ct.cart = ?", @id
+    add_tag: (tag) =>
+        query "INSERT INTO carts_tags (cart, tag) VALUES (?, ?) ON CONFLICT DO NOTHING", @id, tag.id
+    remove_tag: (tag) =>
+        query "DELETE FROM carts_tags WHERE cart = ? AND tag = ?", @id, tag.id
