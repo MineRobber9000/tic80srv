@@ -8,39 +8,40 @@
     <body data-bs-theme="dark">
         <nav class="navbar navbar-expand-lg bg-body-secondary sticky-top">
             <div class="container container-fluid">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <% local navbar_pages = {
-                        {
-                            name = "TIC-80",
-                            link = "/",
-                            active = (page=="home")
-                        },
-                        {
-                            name = "Learn",
-                            link = "/learn",
-                            active = (page=="learn")
-                        },
-                        {
-                            name = "Create",
-                            link = "/create",
-                            active = (page=="create")
-                        },
-                        {
-                            name = "Play",
-                            link = "/play",
-                            active = (page=="play")
+                <a class="navbar-brand" href="/">TIC-80 CE</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <% local navbar_pages = {
+                            {
+                                name = "Learn",
+                                link = "/learn",
+                                active = (page=="learn")
+                            },
+                            {
+                                name = "Create",
+                                link = "/create",
+                                active = (page=="create")
+                            },
+                            {
+                                name = "Play",
+                                link = "/play",
+                                active = (page=="play")
+                            }
                         }
-                    }
-                    for _, page in ipairs(navbar_pages) do %><li class="nav-item">
-                        <a class="nav-link<%- (page.active and ' active') or '' %>" <%- (page.active and 'aria-current="page"' or "") %> href="<%- page.link %>"><%- page.name %></a>
-                    </li><% end %>
-                </ul>
-                <div class="d-flex">
-                    <% if not session.user then %>
-                    <a href="/signin" class="nav-link">Sign in</a>
-                    <% else %>
-                    <a href="/profile" class="nav-link"><%= session.user %></a>
-                    <% end %>
+                        for _, page in ipairs(navbar_pages) do %><li class="nav-item">
+                            <a class="nav-link<%- (page.active and ' active') or '' %>" <%- (page.active and 'aria-current="page"' or "") %> href="<%- page.link %>"><%- page.name %></a>
+                        </li><% end %>
+                    </ul>
+                    <div class="d-flex">
+                        <% if not session.user then %>
+                        <a href="/signin" class="nav-link">Sign in</a>
+                        <% else %>
+                        <a href="/profile" class="nav-link"><%= session.user %></a>
+                        <% end %>
+                    </div>
                 </div>
             </div>
         </nav>
