@@ -332,8 +332,10 @@ class extends lapis.Application
             }
         on_error: => @app.handle_404 @
     }
+    "/api": =>
+        tic_api @, false
     "/json": =>
-        tic_api @
+        tic_api @, true
     handle_404: =>
         @write layout: "layout"
         @page_title = "404"

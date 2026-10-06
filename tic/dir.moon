@@ -1,12 +1,25 @@
 import Carts, Users from require"models"
-json = require "cjson"
+json = require "libs.dkjson"
 
-gen_listing = (folders, files) ->
-    folder_objs = {}
-    for _, folder in ipairs(folders) do
-        table.insert(folder_objs, {name:folder})
-    out = json.encode({folders:folder_objs, :files})
-    return out
+order__mt = {__jsonorder:{"name", "hash", "id", "filename"}}
+
+gen_listing = (folders, files, doJSON) ->
+    if doJSON
+        folder_objs = {}
+        for _, folder in ipairs(folders) do
+            table.insert(folder_objs, {name:folder})
+        for _, file in ipairs(files) do
+            setmetatable file, order__mt
+        return json.encode({folders:folder_objs, :files},{keyorder:{"folders", "files"}})
+    else
+        out = "folders =\n{\n"
+        for folder in *folders
+            out ..= "\t{ name = #{string.format('%q',folder)} },\n"
+        out ..= "\n}\n\nfiles =\n{\n"
+        for file in *files
+            out ..= "\t{ name = #{string.format('%q',file.name)}, hash = #{string.format('%q',file.hash)}, id = #{file.id}, filename = #{string.format('%q',file.filename)} },\n"
+        out ..="\n}"
+        return out
 
 dir_queries = {
     "": "order by [update] desc limit 5",
@@ -32,14 +45,14 @@ get_subdirs = (dir) ->
     table.sort(dirs)
     dirs
 
-dir_listing = (dir) =>
+dir_listing = (dir, doJSON) =>
     if dir=="Devs"
         users = Users\select "order by username asc"
         dirs = {}
         for _, user in ipairs(users)
             table.insert(dirs, user.username)
         files = {}
-        return gen_listing(dirs,files)
+        return gen_listing(dirs,files,doJSON)
     if username = dir\match "Devs/([^/]+)$"
         user = Users\get_one "where username = ?", username
         return @app.handle_404 @ unless user
@@ -56,7 +69,7 @@ dir_listing = (dir) =>
         for _, v in pairs(sort_queries)
             table.insert dirs, v.name
         table.sort(dirs)
-        return gen_listing(dirs,files)
+        return gen_listing(dirs,files,doJSON)
     username, sort = dir\match "Devs/(.-)/([^/]+)"
     if username and sort
         user = Users\get_one "where username = ?", username
@@ -76,7 +89,7 @@ dir_listing = (dir) =>
             file.id = cart.id
             file.filename = cart.filename
             table.insert(files,file)
-        return gen_listing({},files)
+        return gen_listing({},files,doJSON)
     query = dir_queries[dir]
     return @app.handle_404 @ unless query
     files = {}
@@ -88,6 +101,6 @@ dir_listing = (dir) =>
         file.id = cart.id
         file.filename = cart.filename
         table.insert(files,file)
-    return gen_listing(get_subdirs(dir),files)
+    return gen_listing(get_subdirs(dir),files,doJSON)
 
 return dir_listing
